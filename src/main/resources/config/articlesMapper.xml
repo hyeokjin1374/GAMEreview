@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ArticlesDAO">
+
+        <insert id="insertArt" parameterType="ArticlesDTO">
+        INSERT INTO ARTICLES(A_NUM, A_CONTENT, A_SCORE, A_REGDATE, M_NUM, G_NUM)
+        VALUES (ARTICLES_SEQ.nextval, #{aContent}, #{aScore}, sysdate,
+        (select M_NUM from MEMBER WHERE M_NUM = #{mNum}),
+        (select G_NUM from GAMES WHERE G_NUM = #{gNum}))
+        
+        </insert>
+       
+        
+        <select id = "selectList" resultType="GamesDTO">
+             SELECT * FROM GAMES
+        
+        </select>
+        
+         <select id = "selectArtAll" resultType="ArticlesDTO">
+             SELECT * FROM ARTICLES 
+        </select>
+        
+        <select id = "selectArt" resultType="ArticlesDTO">
+             SELECT * FROM ARTICLES ORDER BY A_NUM DESC 
+        </select>
+        
+        <!-- LIKE컨트롤러 -->
+       <insert id="insertLike" parameterType="Long">
+       insert into LIKECHECK(L_NUM, A_NUM, M_NUM)
+       values((SELECT NVL(MAX(L_NUM),0) + 1 FROM LIKECHECK), #{aNum}, #{mNum})
+       </insert>
+       
+        <!-- LIKE컨트롤러 -->
+       <!-- 게시글 추천취소 시 삭제 -->
+       <delete id="deleteLike" parameterType="Long"> 
+       delete from LIKECHECK WHERE A_NUM = #{aNum} and M_NUM = #{mNum}
+       </delete>
+        <!-- 게시글 추천 중복방지 select문 -->
+        <!-- LIKE컨트롤러 -->
+        <select id="likeCheck" resultType="int">
+        select count(*) from LIKECHECK WHERE A_NUM = #{aNum} and M_NUM = #{mNum}
+        </select>
+        
+         <!-- LIKE컨트롤러 -->
+        <!-- 게시글 추천 시 1증가 -->
+        <update id="updateLikeCheck" parameterType="HashMap">
+        update ARTICLES set A_Like = A_LIKE + 1 WHERE G_NUM = #{gNum}
+         and M_NUM = #{mNum} and A_NUM = #{aNum}
+        </update>
+        
+         <!-- LIKE컨트롤러 -->
+         <!-- 게시글 추천취소 시 1감소 -->
+        <update id="updateLikeCheckCancel" parameterType="HashMap">
+    update ARTICLES set A_Like = A_LIKE - 1 WHERE G_NUM = #{gNum}
+     and M_NUM = #{mNum} and A_NUM = #{aNum}
+        </update>
+       
+        
+        <select id="count" resultType="ArticlesDTO">
+        select A_NUM, A_CONTENT, A_SCORE, A_REGDATE, A_LIKE, M_NUM, G_NUM (select nvl(count(*), 0) from
+         REPLIES where A_NUM = #{aNum}) as count2 from articles
+        </select>
+        
+        <update id="artupdate" parameterType="ArticlesDTO">
+        update ARTICLES set A_CONTENT = #{aContent}, A_SCORE = #{aScore}
+         WHERE A_NUM = #{aNum}
+		 and M_NUM = #{mNum} and G_NUM = #{gNum}
+        
+        </update>
+        
+        <delete id="artdelete" parameterType="ArticlesDTO">
+		delete from ARTICLES WHERE A_NUM = #{aNum} and
+		 M_NUM = #{mNum} and G_NUM = #{gNum}
+	</delete>
+	
+	  <select id = "selectDel" resultType="ArticlesDTO" parameterType="HashMap">
+             SELECT * FROM ARTICLES WHERE A_NUM = #{aNum} and
+		 M_NUM = #{mNum} and G_NUM = #{gNum}
+        </select>
+        
+          <select id = "selectContent" resultType="ArticlesDTO" parameterType="HashMap">
+             SELECT A_CONTENT FROM ARTICLES WHERE A_NUM = #{aNum} and
+		 M_NUM = #{mNum} and G_NUM = #{gNum}
+        </select>
+        
+     
+        </mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="RepliesDAO">
+
+
+	<insert id="insertRe" parameterType="RepliesDTO">
+	INSERT INTO REPLIES(RE_NUM, RE_CONTENT, A_NUM, M_NUM, RE_REGDATE)
+	VALUES (REPLIES_SEQ.nextval, #{reContent},
+	(select A_NUM from ARTICLES WHERE A_NUM=#{aNum}),
+	(select M_NUM from MEMBER WHERE M_NUM=#{mNum}),
+    sysdate)
+    </insert>
+
+	<select id="selectRe" resultType="RepliesDTO" parameterType="HashMap">
+		SELECT * FROM REPLIES where A_NUM = #{kk} ORDER BY RE_NUM DESC
+	</select>
+
+	<update id="updateRe" parameterType="RepliesDTO">
+		update REPLIES set RE_CONTENT = #{reContent} WHERE A_NUM = #{aNum}
+		 and M_NUM = #{mNum} and RE_NUM = #{reNum}
+	</update>
+
+	<delete id="deleteRe" parameterType="RepliesDTO">
+		delete from REPLIES WHERE A_NUM = #{aNum} and
+		 M_NUM = #{mNum} and RE_NUM = #{reNum}
+	</delete>
+	
+	<select id="selectdel" resultType="RepliesDTO" parameterType="HashMap">
+	SELECT * FROM REPLIES where A_NUM = #{kk} and M_NUM = #{kk2} ORDER BY RE_NUM DESC
+	</select>
+	
+	 <select id="selectcount" resultType="Integer" parameterType="HashMap">
+        select count(*) from REPLIES  WHERE A_NUM = #{aNum}
+        </select>
+	
+              
+
+
+</mapper>
