@@ -37,6 +37,7 @@
        <delete id="deleteLike" parameterType="Long"> 
        delete from LIKECHECK WHERE A_NUM = #{aNum} and M_NUM = #{mNum}
        </delete>
+       
         <!-- 게시글 추천 중복방지 select문 -->
         <!-- LIKE컨트롤러 -->
         <select id="likeCheck" resultType="int">
@@ -79,7 +80,8 @@
              SELECT * FROM ARTICLES WHERE A_NUM = #{aNum} and
 		 M_NUM = #{mNum} and G_NUM = #{gNum}
         </select>
-        
+          
+          <!-- ARTICELS  -->
           <select id = "selectContent" resultType="ArticlesDTO" parameterType="HashMap">
              SELECT A_CONTENT FROM ARTICLES WHERE A_NUM = #{aNum} and
 		 M_NUM = #{mNum} and G_NUM = #{gNum}

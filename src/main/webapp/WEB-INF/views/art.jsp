@@ -45,6 +45,8 @@
 	<h2>게임리뷰 등록</h2>
 
 	<form:form commandName="artData"  method="POST">
+	
+	<!-- CKEDITOR -->
 	<script src="${pageContext.request.contextPath }/resources/ckeditor1/ckeditor.js"></script>
 	<textarea id="ck1" name="aContent"></textarea>
 
@@ -58,6 +60,7 @@
 	
 			
 			<h3>리뷰 점수</h3>
+<!--  별   -->
 			<div class=".container">
 			
 			<span class="star"> ★★★★★ <span>   ★★★★★ </span>
@@ -85,8 +88,8 @@
 		      
 			    <tr>
 			    <td style="text-align:center ;" width="100" class="fw-bold table-primary">1</td>
-			      <td style="text-align:center ;" width="200" class="fw-bold table-primary" >리뷰 번호</td>
-			    <td width="300" class="fw-bold table-primary">  ${a.aNum}</td>
+			      <td style="text-align:center ;" width="250" class="fw-bold table-primary" >리뷰 번호</td>
+			    <td width="300" class="fw-bold table-primary" >  ${a.aNum}</td>
 			</tr>
 			
 			    <tr>
@@ -127,6 +130,9 @@
 		    <td style="text-align:center ;" class="fw-bold">7</td>
 			      <td style="text-align:center ;">좋아요♥</td>
 <td style="margin-right:1px;">
+
+
+    <!-- ajax 사용 -->
 	<button id="bt" name = "bt" type="button" class="btn btn-danger" onclick="updateLike(${a.aNum}, ${a.gNum }, ${a.mNum })">추천 ${a.aLike}</button>
 			
 </td>

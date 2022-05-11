@@ -24,6 +24,7 @@ import com.game.review.command.ArtCommand;
 import com.game.review.dto.ArticlesDTO;
 
 @Controller
+//리뷰 등록 컨트롤러
 public class ArticlesController {
 
 	      @Autowired
@@ -33,13 +34,16 @@ public class ArticlesController {
 	      private RepliesService rservice ;
 	      
 	     
-	      
+	      //리뷰등록 할때
 	      @RequestMapping(value="/art/{gNum}" ,method = RequestMethod.GET)
 	      public String art(@ModelAttribute("artData") ArtCommand acmd ,
 	    		  Errors errors, Model model, HttpServletRequest request,
 	    		  HttpServletResponse response,
 	    		  @PathVariable("gNum") Long gNum
 	    		  ) throws ServletException, IOException {
+	    	  
+	    	  // art 는  등록한 리뷰를 selectArt 쿼리문으로  A_NUM 순서대로 리뷰등록한 글 보이게 
+	    	  // selectcount 리뷰글에 댓글이 몇개 달려있는지 확인 ex) 댓글달기(3) 댓글 3개가 있다.
 	    	  List<ArticlesDTO> art = articlesservice.selectArt() ;
 	    	  
 	    	  for(int i = 0 ; i < art.size() ; i++) {
@@ -53,7 +57,8 @@ public class ArticlesController {
 	    	
 	    	  return "/art" ;
 	      }
-	   
+	       
+	      //리뷰등록 할때
 	      @RequestMapping(value="/art/{gNum}" ,method = RequestMethod.POST)
 	      public String art2(@ModelAttribute("artData") ArtCommand acmd,
 	    		  Errors errors,MultipartFile upload,
@@ -64,6 +69,7 @@ public class ArticlesController {
 	    	      if(errors.hasErrors()) {
 	    	    	  return "/art" ;
 	    	      }
+	    	      //artregist >> 리뷰등록 인서트
 	    	    articlesservice.artregist(acmd);  
 	    	    
 	    	
@@ -71,6 +77,7 @@ public class ArticlesController {
 	    	  
 	      }
 	      
+	      // 리뷰 수정하기
 	      @RequestMapping(value="/artupdate/{gNum}/{aNum}" ,method = RequestMethod.GET)
 	      public String ArtUpdate(@ModelAttribute("ArtUpdateData") ArtCommand acmd,
 	    		  Errors errors, @PathVariable("gNum") Long gNum,
@@ -78,6 +85,7 @@ public class ArticlesController {
 	    	  System.out.println("리뷰 업데이트 겟");
 	   	     Long mNum = (long) 2 ;
 	    	  
+	   	      //내가 작성했던 리뷰글 보여주기
 	    	  List<ArticlesDTO> art = articlesservice.selectContent(gNum, mNum, aNum);
 	    	  System.out.println("art :" + art);
 	    	  model.addAttribute("art" ,art);  
@@ -86,6 +94,7 @@ public class ArticlesController {
 	    	  
 	      }
 	      
+	      //리뷰 수정하기 
 	      @RequestMapping(value="/artupdate/{gNum}/{aNum}" ,method = RequestMethod.POST)
 	      public String ArtUpdate2(@ModelAttribute("ArtUpdateData") ArtCommand acmd,
 	    		  Errors errors, @PathVariable("gNum") Long gNum,
@@ -99,13 +108,14 @@ public class ArticlesController {
 	    	  adto.setmNum((long) 2);
 	    	  adto.setaScore(acmd.getaScore());
 	    	  
-	    	  
+	    	  //리뷰 수정 업데이트문
 	    	  articlesservice.ArtUpdate(adto);
 	    	    
 	    	    return "redirect:/art/{gNum}" ; 
 	    	  
 	      }
 	      
+	      //리뷰글 삭제하기
 	      @RequestMapping(value="/artdelete/{gNum}/{aNum}" ,method = RequestMethod.GET)
 	      public String ArtDelete(@PathVariable("gNum") Long gNum,
 	    		  @PathVariable("aNum") Long aNum,Model model) {
@@ -114,6 +124,7 @@ public class ArticlesController {
   
 	    	Long mNum = (long) 2 ;
 	         
+	    	    //리뷰글 삭제하기 전에 내가 쓴 리뷰글 확인하기
 	    	  List<ArticlesDTO> delete = articlesservice.selectDel( gNum,  mNum,  aNum);
 	    	model.addAttribute("delete" ,delete); 
 	    	  System.out.println("리뷰삭제 페이지");
@@ -121,6 +132,7 @@ public class ArticlesController {
 	    	  return "/artdelete" ;
 	      }
 	      
+	      //리뷰글 삭제
 	      @RequestMapping(value="/artdelete/{gNum}/{aNum}" ,method = RequestMethod.POST)
 	      public String ArtDelete2( @PathVariable("gNum") Long gNum,
 	    		  @PathVariable("aNum") Long aNum) {
@@ -133,6 +145,7 @@ public class ArticlesController {
 	    	  adto.setgNum(gNum);
 	    	  adto.setmNum((long) 2);
 	    	  
+	    	  //리뷰글 삭제하기
 	    	  articlesservice.ArtDelete(adto);
 	    	  
 	    	  return "redirect:/art/{gNum}" ;

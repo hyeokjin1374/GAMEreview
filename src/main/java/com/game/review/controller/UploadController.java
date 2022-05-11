@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class UploadController {
 	
-	
+	//CKEDITOR 파일 업로드 누르고 서버로 전송 누를때 사용
 	@RequestMapping(value="/imageUpload", method = RequestMethod.POST)	
 	public void imageUpload(HttpServletRequest request,
 			HttpServletResponse response,
